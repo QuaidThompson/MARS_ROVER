@@ -123,13 +123,13 @@ float RightTankSpeed;
 
 double smoothingVal = .09;
 
-double   leftFrontParams[] = {0, .3, 0, -.3};
-double  leftCenterParams[] = {0, .3, 0, -.3};
-double    leftRearParams[] = {0, .3, 0, -.3};
+double   leftFrontParams[] = {0, .7, 0, -.7};
+double  leftCenterParams[] = {0, .7, 0, -.7};
+double    leftRearParams[] = {0, .7, 0, -.7};
 
-double  rightFrontParams[] = {0, .3, 0, -.3};
-double rightCenterParams[] = {0, .3, 0, -.3};
-double   rightRearParams[] = {0, .3, 0, -.3};
+double  rightFrontParams[] = {0, .7, 0, -.7};
+double rightCenterParams[] = {0, .7, 0, -.7};
+double   rightRearParams[] = {0, .7, 0, -.7};
 
 double      LeftFrontMinForward = 0;
 double     LeftCenterMinForward = 0;
@@ -176,12 +176,12 @@ void Robot::setDrivetrain(double rateOfTurn, double speed, double mixConstant, b
     // dbgvln("    176")
     if (rateOfTurn > 0) {
       dbgvln("    Bck R")
+      p_leftSpeed = (speed - rateOfTurn) * mixConstant;;
       p_rightSpeed = speed;
-      p_leftSpeed = (speed - rateOfTurn) * mixConstant;
     } else if (rateOfTurn < 0) {
       dbgvln("    Bck L")
-      p_leftSpeed = speed;
-      p_rightSpeed = (speed + rateOfTurn) * mixConstant; // CWS!!! must add the rateOfTurn, which itself is negative. // orig: p_rightSpeed = (speed - rateOfTurn) * mixConstant;
+      p_leftSpeed = (speed + rateOfTurn) * mixConstant; // CWS!!! must add the rateOfTurn, which itself is negative. // orig: p_rightSpeed = (speed - rateOfTurn) * mixConstant;
+      p_rightSpeed = speed;
     } else {
       dbgvln("    Bck")
       p_leftSpeed = speed;
@@ -191,12 +191,12 @@ void Robot::setDrivetrain(double rateOfTurn, double speed, double mixConstant, b
     // dbgvln("    191")
     if (rateOfTurn > 0) {
       dbgvln("    fwd R")
-      p_rightSpeed = speed;
-      p_leftSpeed = (speed + rateOfTurn) * mixConstant; // CWS!!! since speed is negative, we want to make speed closer to zero (so add the positive rateOfTurn) // orig: p_leftSpeed = (speed - rateOfTurn) * mixConstant;
+      p_leftSpeed = speed;
+      p_rightSpeed = (speed + rateOfTurn) * mixConstant; // CWS!!! since speed is negative, we want to make speed closer to zero (so add the positive rateOfTurn) // orig: p_leftSpeed = (speed - rateOfTurn) * mixConstant;
     } else if (rateOfTurn < 0) {
       dbgvln("    fwd L")
-      p_leftSpeed = speed;
-      p_rightSpeed = (speed - rateOfTurn) * mixConstant;
+      p_rightSpeed = speed;
+      p_leftSpeed = (speed - rateOfTurn) * mixConstant;
     } else {
       dbgvln("    fwd")
       p_leftSpeed = speed;
@@ -206,7 +206,7 @@ void Robot::setDrivetrain(double rateOfTurn, double speed, double mixConstant, b
     // dbgvln("    206")
     if ((rateOfTurn > 0) || (rateOfTurn < 0)) { // CWS?, just curious : why not use "if (rateOfTurn != 0) {"
       dbgvln("    L/R")
-      p_leftSpeed = rateOfTurn * -1; //CWS- avoid possible future edit problems: use "p_leftSpeed = rateOfTurn * -1."  
+      p_leftSpeed = rateOfTurn * -1.0; //CWS- avoid possible future edit problems: use "p_leftSpeed = rateOfTurn * -1."  
       p_rightSpeed = rateOfTurn;
     } else {
       dbgvln("    212")
