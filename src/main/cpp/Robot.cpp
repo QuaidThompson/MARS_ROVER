@@ -175,38 +175,38 @@ void Robot::setDrivetrain(double rateOfTurn, double speed, double mixConstant, b
   if (speed > 0) {
     // dbgvln("    176")
     if (rateOfTurn > 0) {
-      dbgvln("    178")
+      dbgvln("    Bck R")
       p_rightSpeed = speed;
       p_leftSpeed = (speed - rateOfTurn) * mixConstant;
     } else if (rateOfTurn < 0) {
-      dbgvln("    182")
+      dbgvln("    Bck L")
       p_leftSpeed = speed;
-      p_rightSpeed = (speed - rateOfTurn) * mixConstant;
+      p_rightSpeed = (speed + rateOfTurn) * mixConstant; // CWS!!! must add the rateOfTurn, which itself is negative. // orig: p_rightSpeed = (speed - rateOfTurn) * mixConstant;
     } else {
-      dbgvln("    186")
+      dbgvln("    Bck")
       p_leftSpeed = speed;
       p_rightSpeed = speed;
     }
   } else if (speed < 0) {
     // dbgvln("    191")
     if (rateOfTurn > 0) {
-      dbgvln("    193")
+      dbgvln("    fwd R")
       p_rightSpeed = speed;
-      p_leftSpeed = (speed - rateOfTurn) * mixConstant;
+      p_leftSpeed = (speed + rateOfTurn) * mixConstant; // CWS!!! since speed is negative, we want to make speed closer to zero (so add the positive rateOfTurn) // orig: p_leftSpeed = (speed - rateOfTurn) * mixConstant;
     } else if (rateOfTurn < 0) {
-      dbgvln("    197")
+      dbgvln("    fwd L")
       p_leftSpeed = speed;
       p_rightSpeed = (speed - rateOfTurn) * mixConstant;
     } else {
-      dbgvln("    201")
+      dbgvln("    fwd")
       p_leftSpeed = speed;
       p_rightSpeed = speed;
     }
-  } else if (speed == 0 && zeroTurn) {
+  } else if (speed == 0 && zeroTurn) { // CWS_MatchDir
     // dbgvln("    206")
-    if ((rateOfTurn > 0) || (rateOfTurn < 0)) {
-      dbgvln("    208")
-      p_leftSpeed = rateOfTurn * -1;
+    if ((rateOfTurn > 0) || (rateOfTurn < 0)) { // CWS?, just curious : why not use "if (rateOfTurn != 0) {"
+      dbgvln("    L/R")
+      p_leftSpeed = rateOfTurn * -1; //CWS- avoid possible future edit problems: use "p_leftSpeed = rateOfTurn * -1."  
       p_rightSpeed = rateOfTurn;
     } else {
       dbgvln("    212")
@@ -217,12 +217,12 @@ void Robot::setDrivetrain(double rateOfTurn, double speed, double mixConstant, b
     // dbgvln("    217")
     if (rateOfTurn > 0) {
       dbgvln("    219")
-      p_leftSpeed = rateOfTurn;
-      p_rightSpeed = 0;
+      p_leftSpeed = rateOfTurn; // CWS! : should this be "p_leftSpeed = - rateOfTurn;" to match the direction at "CWS_MatchDir"? Won't matter since zeroTurn is always TRUE.
+      p_rightSpeed = 0; // CWS! alternately to the above line change, this could be set to "p_rightSpeed = rateOfTurn;"
     } else if (rateOfTurn < 0) {
       dbgvln("    223")
-      p_leftSpeed = 0;
-      p_rightSpeed = rateOfTurn;
+      p_leftSpeed = 0; // CWS! alternately to the bwlow line change, this could be set to "p_leftSpeed = rateOfTurn;"
+      p_rightSpeed = rateOfTurn;// CWS! : should this be "p_rightSpeed = - rateOfTurn;" to match the direction at "CWS_MatchDir"? Won't matter since zeroTurn is always TRUE.
     } else {
       dbgvln("    227")
       p_leftSpeed = 0;

@@ -61,5 +61,19 @@
     "streambuf": "cpp",
     "typeinfo": "cpp",
     "*.inc": "cpp"
-  }
+  },
+  "editor.formatOnSave": true,
+  "C_Cpp.vcFormat.indent.accessSpecifiers": true,
+  "C_Cpp.vcFormat.indent.caseLabels": true,
+  "C_Cpp.vcFormat.indent.preprocessor": "none",
+  "C_Cpp.vcFormat.indent.preserveComments": true,
+  "C_Cpp.vcFormat.indent.withinParentheses": "alignToParenthesis",
+  "C_Cpp.vcFormat.newLine.beforeOpenBrace.block": "sameLine",
+  "C_Cpp.vcFormat.newLine.beforeOpenBrace.function": "sameLine",
+  "C_Cpp.vcFormat.newLine.beforeOpenBrace.namespace": "sameLine",
+  "C_Cpp.vcFormat.newLine.beforeOpenBrace.type": "sameLine",
+  "C_Cpp.vcFormat.newLine.closeBraceSameLine.emptyFunction": true,
+  "C_Cpp.vcFormat.newLine.closeBraceSameLine.emptyType": true,
+  "C_Cpp.vcFormat.space.beforeOpenSquareBracket": true,
+  "java.format.comments.enabled": false
 }

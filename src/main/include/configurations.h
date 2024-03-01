@@ -5,16 +5,16 @@
 
 
 // #define KILL_NEW_FEATURE
-#define KILL_SPECIFIC_NEW_FEATURE
-#define COMPILE_FOR_RELEASE
-// #define DEBUGGING_FEATURE
+// #define KILL_SPECIFIC_NEW_FEATURE
+// #define COMPILE_FOR_RELEASE
+#define DEBUGGING_FEATURE
 // #define FEATURE_UNDER_DEVELOPMENT
 
 ////////////////
 /*DEBUG LEVELS*/
 // #define DEBUG_CURRENT
 // #define DEBUG_OTHER
-// #define DEBUG_TUNABLE
+#define DEBUG_TUNABLE
 /*DEBUG LEVELS*/
 ////////////////
 
