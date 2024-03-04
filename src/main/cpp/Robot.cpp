@@ -176,8 +176,8 @@ void Robot::setDrivetrain(double rateOfTurn, double speed, double mixConstant, b
     // dbgvln("    176")
     if (rateOfTurn > 0) {
       dbgvln("    Bck R")
-      p_leftSpeed = (speed - rateOfTurn) * mixConstant;;
-      p_rightSpeed = speed;
+      p_leftSpeed = speed;
+      p_rightSpeed = (speed - rateOfTurn) * mixConstant;
     } else if (rateOfTurn < 0) {
       dbgvln("    Bck L")
       p_leftSpeed = (speed + rateOfTurn) * mixConstant; // CWS!!! must add the rateOfTurn, which itself is negative. // orig: p_rightSpeed = (speed - rateOfTurn) * mixConstant;
