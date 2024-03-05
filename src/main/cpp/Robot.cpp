@@ -3,6 +3,8 @@
 #include "configurations.h"
 #include "Robot.h"
 #include <iostream>
+#include <algorithm>
+#include <cmath>
 
 
 // #define ENABLE_FEATURE_X
@@ -163,103 +165,143 @@ double      RightRearMaxBackward = -1;
 /*FUNCTIONS (need to be moved to a seperate file to keep this one clean)*/
 /*vvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvv*/
 
-void Robot::setDrivetrain(double rateOfTurn, double speed, double mixConstant, bool zeroTurn) {
+void Robot::setDrivetrain(double rotate, double drive, double mixConstant, bool zeroTurn) {      // todo: handle false zero turn as well as mix Constant input.
   double p_leftSpeed = 0;
   double p_rightSpeed = 0;
-  // zeroTurn = false;
-  mixConstant = 1;
-  dbg("rateOfTurn: ")
-  dbgv(rateOfTurn)
-  dbgv("        speed: ")
-  dbgv(speed)
-  if (speed > 0) {
-    // dbgvln("    176")
-    if (rateOfTurn > 0) {
-      dbgvln("    Bck R")
-        #if 1//cws2!!!
-        p_rightSpeed = (speed - rateOfTurn) * mixConstant;
-        p_leftSpeed = speed;
-        #else
-        p_rightSpeed = speed;
-        p_leftSpeed = (speed - rateOfTurn) * mixConstant;
-        #endif  
-    } else if (rateOfTurn < 0) {
-      dbgvln("    Bck L") //cws3
-      #if 1//cws2!!!
-      p_leftSpeed = (speed + rateOfTurn) * mixConstant; // CWS!!! must add the rateOfTurn, which itself is negative. // orig: p_rightSpeed = (speed - rateOfTurn) * mixConstant;
-      p_rightSpeed = speed;
-      #else
-      p_leftSpeed = speed;
-      p_rightSpeed = (speed + rateOfTurn) * mixConstant; // CWS!!! must add the rateOfTurn, which itself is negative. // orig: p_rightSpeed = (speed - rateOfTurn) * mixConstant;
-      #endif  
-    } else {
-      dbgvln("    Bck")
-      p_leftSpeed = speed;
-      p_rightSpeed = speed;
+  double p_total = drive + rotate;
+  double p_difference = drive - rotate;
+  float p_maximum = std::max(std::abs(drive), std::abs(rotate));
+
+  if (drive >= 0) {
+    if (rotate >= 0) {                     // 1
+      frc::SmartDashboard::PutNumber("set loc.", 1);
+      p_rightSpeed = p_maximum;
+      p_leftSpeed = p_difference;
+    } else {                               // 2
+    frc::SmartDashboard::PutNumber("set loc.", 2);
+      p_rightSpeed = p_total;
+      p_leftSpeed = p_maximum;
     }
-  } else if (speed < 0) {
-    // dbgvln("    191")
-    if (rateOfTurn > 0) {
-      dbgvln("    fwd R")
-        #if 1//cws2!!!
-        p_rightSpeed = (speed + rateOfTurn) * mixConstant; // CWS!!! since speed is negative, we want to make speed closer to zero (so add the positive rateOfTurn) // orig: p_leftSpeed = (speed - rateOfTurn) * mixConstant;
-        p_leftSpeed = speed;
-        #else
-        p_rightSpeed = speed;
-        p_leftSpeed  = (speed + rateOfTurn) * mixConstant; // CWS!!! since speed is negative, we want to make speed closer to zero (so add the positive rateOfTurn) // orig: p_leftSpeed = (speed - rateOfTurn) * mixConstant;
-        #endif  
-    } else if (rateOfTurn < 0) {
-      dbgvln("    fwd L")
-        #if 1//cws2!!!
-        p_leftSpeed  = (speed - rateOfTurn) * mixConstant;
-        p_rightSpeed =  speed;
-        #else
-        p_leftSpeed  = speed;
-        p_rightSpeed = (speed - rateOfTurn) * mixConstant;
-        #endif  
-    } else {
-      dbgvln("    fwd")
-      p_leftSpeed = speed;
-      p_rightSpeed = speed;
-    }
-  } else if (speed == 0 && zeroTurn) { // CWS_MatchDir
-    // dbgvln("    206")
-    if ((rateOfTurn > 0) || (rateOfTurn < 0)) { // CWS?, just curious : why not use "if (rateOfTurn != 0) {"
-      dbgvln("    L/R") ///cws3a
-      p_leftSpeed = rateOfTurn * -1.0; //CWS- avoid possible future edit problems: use "p_leftSpeed = rateOfTurn * -1."  
-      p_rightSpeed = rateOfTurn;
-    } else {
-      dbgvln("    212")
-      p_leftSpeed = 0;
-      p_rightSpeed = 0;
-    }
-  } else if (speed == 0 && !zeroTurn){
-    // dbgvln("    217")
-    if (rateOfTurn > 0) {
-      dbgvln("    219")
-      p_leftSpeed = rateOfTurn; // CWS! : should this be "p_leftSpeed = - rateOfTurn;" to match the direction at "CWS_MatchDir"? Won't matter since zeroTurn is always TRUE.
-      p_rightSpeed = 0; // CWS! alternately to the above line change, this could be set to "p_rightSpeed = rateOfTurn;"
-    } else if (rateOfTurn < 0) {
-      dbgvln("    223")
-      p_leftSpeed = 0; // CWS! alternately to the bwlow line change, this could be set to "p_leftSpeed = rateOfTurn;"
-      p_rightSpeed = rateOfTurn;// CWS! : should this be "p_rightSpeed = - rateOfTurn;" to match the direction at "CWS_MatchDir"? Won't matter since zeroTurn is always TRUE.
-    } else {
-      dbgvln("    227")
-      p_leftSpeed = 0;
-      p_rightSpeed = 0;
+  } else {                                 // 3
+  frc::SmartDashboard::PutNumber("set loc.", 3);
+    if (rotate >= 0) {
+      p_rightSpeed = p_total;
+      p_leftSpeed = -p_maximum;
+    } else {                               // 4
+    frc::SmartDashboard::PutNumber("set loc.", 4);
+      p_rightSpeed = -p_maximum;
+      p_leftSpeed = p_difference;
     }
   }
-  LeftFront.Set(p_leftSpeed);
-  LeftCenter.Set(p_leftSpeed);
-  LeftRear.Set(p_leftSpeed);
+  // LeftFront.Set(p_leftSpeed);
+  // LeftCenter.Set(p_leftSpeed);
+  // LeftRear.Set(p_leftSpeed);
  
-  RightFront.Set(p_rightSpeed);
-  RightCenter.Set(p_rightSpeed);
-  RightRear.Set(p_rightSpeed);
+  // RightFront.Set(p_rightSpeed);
+  // RightCenter.Set(p_rightSpeed);
+  // RightRear.Set(p_rightSpeed);
 
-  frc::SmartDashboard::PutNumber("p_leftSpeed", p_leftSpeed);
-  frc::SmartDashboard::PutNumber("p_rightSpeed", p_rightSpeed);
+  frc::SmartDashboard::PutNumber("p_leftSpeed", -p_leftSpeed);
+  frc::SmartDashboard::PutNumber("p_rightSpeed", -p_rightSpeed);
 }
+
+// void Robot::setDrivetrain(double rateOfTurn, double speed, double mixConstant, bool zeroTurn) {
+//   double p_leftSpeed = 0;
+//   double p_rightSpeed = 0;
+//   // zeroTurn = false;
+//   mixConstant = 1;
+//   dbg("rateOfTurn: ")
+//   dbgv(rateOfTurn)
+//   dbgv("        speed: ")
+//   dbgv(speed)
+//   if (speed > 0) {
+//     // dbgvln("    176")
+//     if (rateOfTurn > 0) {
+//       dbgvln("    Bck R")
+//         #if 1//cws2!!!
+//         p_rightSpeed = (speed - rateOfTurn) * mixConstant;
+//         p_leftSpeed = speed;
+//         #else
+//         p_rightSpeed = speed;
+//         p_leftSpeed = (speed - rateOfTurn) * mixConstant;
+//         #endif  
+//     } else if (rateOfTurn < 0) {
+//       dbgvln("    Bck L") //cws3
+//       #if 1//cws2!!!
+//       p_leftSpeed = (speed + rateOfTurn) * mixConstant; // CWS!!! must add the rateOfTurn, which itself is negative. // orig: p_rightSpeed = (speed - rateOfTurn) * mixConstant;
+//       p_rightSpeed = speed;
+//       #else
+//       p_leftSpeed = speed;
+//       p_rightSpeed = (speed + rateOfTurn) * mixConstant; // CWS!!! must add the rateOfTurn, which itself is negative. // orig: p_rightSpeed = (speed - rateOfTurn) * mixConstant;
+//       #endif  
+//     } else {
+//       dbgvln("    Bck")
+//       p_leftSpeed = speed;
+//       p_rightSpeed = speed;
+//     }
+//   } else if (speed < 0) {
+//     // dbgvln("    191")
+//     if (rateOfTurn > 0) {
+//       dbgvln("    fwd R")
+//         #if 1//cws2!!!
+//         p_rightSpeed = (speed + rateOfTurn) * mixConstant; // CWS!!! since speed is negative, we want to make speed closer to zero (so add the positive rateOfTurn) // orig: p_leftSpeed = (speed - rateOfTurn) * mixConstant;
+//         p_leftSpeed = speed;
+//         #else
+//         p_rightSpeed = speed;
+//         p_leftSpeed  = (speed + rateOfTurn) * mixConstant; // CWS!!! since speed is negative, we want to make speed closer to zero (so add the positive rateOfTurn) // orig: p_leftSpeed = (speed - rateOfTurn) * mixConstant;
+//         #endif  
+//     } else if (rateOfTurn < 0) {
+//       dbgvln("    fwd L")
+//         #if 1//cws2!!!
+//         p_leftSpeed  = (speed - rateOfTurn) * mixConstant;
+//         p_rightSpeed =  speed;
+//         #else
+//         p_leftSpeed  = speed;
+//         p_rightSpeed = (speed - rateOfTurn) * mixConstant;
+//         #endif  
+//     } else {
+//       dbgvln("    fwd")
+//       p_leftSpeed = speed;
+//       p_rightSpeed = speed;
+//     }
+//   } else if (speed == 0 && zeroTurn) { // CWS_MatchDir
+//     // dbgvln("    206")
+//     if ((rateOfTurn > 0) || (rateOfTurn < 0)) { // CWS?, just curious : why not use "if (rateOfTurn != 0) {"
+//       dbgvln("    L/R") ///cws3a
+//       p_leftSpeed = rateOfTurn * -1.0; //CWS- avoid possible future edit problems: use "p_leftSpeed = rateOfTurn * -1."  
+//       p_rightSpeed = rateOfTurn;
+//     } else {
+//       dbgvln("    212")
+//       p_leftSpeed = 0;
+//       p_rightSpeed = 0;
+//     }
+//   } else if (speed == 0 && !zeroTurn){
+//     // dbgvln("    217")
+//     if (rateOfTurn > 0) {
+//       dbgvln("    219")
+//       p_leftSpeed = rateOfTurn; // CWS! : should this be "p_leftSpeed = - rateOfTurn;" to match the direction at "CWS_MatchDir"? Won't matter since zeroTurn is always TRUE.
+//       p_rightSpeed = 0; // CWS! alternately to the above line change, this could be set to "p_rightSpeed = rateOfTurn;"
+//     } else if (rateOfTurn < 0) {
+//       dbgvln("    223")
+//       p_leftSpeed = 0; // CWS! alternately to the bwlow line change, this could be set to "p_leftSpeed = rateOfTurn;"
+//       p_rightSpeed = rateOfTurn;// CWS! : should this be "p_rightSpeed = - rateOfTurn;" to match the direction at "CWS_MatchDir"? Won't matter since zeroTurn is always TRUE.
+//     } else {
+//       dbgvln("    227")
+//       p_leftSpeed = 0;
+//       p_rightSpeed = 0;
+//     }
+//   }
+//   // LeftFront.Set(p_leftSpeed);
+//   // LeftCenter.Set(p_leftSpeed);
+//   // LeftRear.Set(p_leftSpeed);
+ 
+//   // RightFront.Set(p_rightSpeed);
+//   // RightCenter.Set(p_rightSpeed);
+//   // RightRear.Set(p_rightSpeed);
+
+//   frc::SmartDashboard::PutNumber("p_leftSpeed", -p_leftSpeed);
+//   frc::SmartDashboard::PutNumber("p_rightSpeed", -p_rightSpeed);
+// }
 
 float map(float input, float inA, float inb, float outA, float outB) {      // map function for easy conversion of input to output values
   float output = outA + ((outB - outA) / (inb -inA)) * (input - inA);
@@ -782,8 +824,10 @@ double Robot::GetJoyWithDZ(double joystickVal, double minPosVal, double maxNegVa
     // double xJoyPos = f310.GetRawAxis(F310_RIGHT_STICK_X_AXIS);
     // double yJoyPos = f310.GetRawAxis(F310_RIGHT_STICK_Y_AXIS);
 
-    double xJoyPos = GetJoyWithDZ(f310.GetRawAxis(F310_RIGHT_STICK_X_AXIS), .2, -.2);
-    double yJoyPos = GetJoyWithDZ(f310.GetRawAxis(F310_RIGHT_STICK_Y_AXIS), .2, -.2);
+    double xJoyPos = GetJoyWithDZ(f310.GetRawAxis(F310_RIGHT_STICK_X_AXIS), .03, -.03);
+    double yJoyPos = GetJoyWithDZ(f310.GetRawAxis(F310_RIGHT_STICK_Y_AXIS), .03, -.03);
+    frc::SmartDashboard::PutNumber("xJoyPos", xJoyPos);
+    frc::SmartDashboard::PutNumber("yJoyPos", -yJoyPos);
 
     // double xJoyPos = GetJoyWithDZ(.21, .2, -.2);
     // double yJoyPos = GetJoyWithDZ(.21, .2, -.2);

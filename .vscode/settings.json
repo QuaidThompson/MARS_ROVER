@@ -60,7 +60,8 @@
     "stdexcept": "cpp",
     "streambuf": "cpp",
     "typeinfo": "cpp",
-    "*.inc": "cpp"
+    "*.inc": "cpp",
+    "xutility": "cpp"
   },
   "editor.formatOnSave": true,
   "C_Cpp.vcFormat.indent.accessSpecifiers": true,
