@@ -165,6 +165,33 @@ double      RightRearMaxBackward = -1;
 /*FUNCTIONS (need to be moved to a seperate file to keep this one clean)*/
 /*vvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvv*/
 
+float RampVal(float currentVal, float targetVal, float rampIncriment) {
+  if (currentVal != targetVal){            // do we need to ramp?
+    if (currentVal > targetVal) {          // if we are ramping down
+      float f = currentVal - targetVal;
+      if (f > rampIncriment) {
+        currentVal -= rampIncriment;
+        return currentVal;
+      } else {
+        return targetVal;
+      }
+    } else if (currentVal < targetVal) {   // if we are ramping up
+      float f = targetVal - currentVal;
+      if (f > rampIncriment) {
+        currentVal += rampIncriment;
+        return currentVal;
+      } else {
+        return targetVal;
+      }
+    } else {
+      print("!!! N.F.G. !!!");    // shouldnt ever get here
+      return 0;
+    }
+  } else {          // if we are already at the intended value
+    return targetVal;
+  }
+}
+
 float map(float input, float inA, float inb, float outA, float outB) {      // map function for easy conversion of input to output values
   float output = outA + ((outB - outA) / (inb -inA)) * (input - inA);
   return output;
@@ -319,32 +346,6 @@ void Robot::setDrivetrain(double rotate, double drive, double mixConstant, bool 
 
 
 
-float RampVal(float currentVal, float targetVal, float rampIncriment) {
-  if (currentVal != targetVal){            // do we need to ramp?
-    if (currentVal > targetVal) {          // if we are ramping down
-      float f = currentVal - targetVal;
-      if (f > rampIncriment) {
-        currentVal -= rampIncriment;
-        return currentVal;
-      } else {
-        return targetVal;
-      }
-    } else if (currentVal < targetVal) {   // if we are ramping up
-      float f = targetVal - currentVal;
-      if (f > rampIncriment) {
-        currentVal += rampIncriment;
-        return currentVal;
-      } else {
-        return targetVal;
-      }
-    } else {
-      print("!!! N.F.G. !!!");    // shouldnt ever get here
-      return 0;
-    }
-  } else {          // if we are already at the intended value
-    return targetVal;
-  }
-}
 
 double Robot::GetJoyWithDZ(double joystickVal, double minPosVal, double maxNegVal) {
   if (joystickVal >= minPosVal) {
