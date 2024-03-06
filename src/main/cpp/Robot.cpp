@@ -165,45 +165,58 @@ double      RightRearMaxBackward = -1;
 /*FUNCTIONS (need to be moved to a seperate file to keep this one clean)*/
 /*vvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvv*/
 
-void Robot::setDrivetrain(double rotate, double drive, double mixConstant, bool zeroTurn) {      // todo: handle false zero turn as well as mix Constant input.
-  double p_leftSpeed = 0;
-  double p_rightSpeed = 0;
-  double p_total = drive + rotate;
-  double p_difference = drive - rotate;
-  float p_maximum = std::max(std::abs(drive), std::abs(rotate));
+float map(float input, float inA, float inb, float outA, float outB) {      // map function for easy conversion of input to output values
+  float output = outA + ((outB - outA) / (inb -inA)) * (input - inA);
+  return output;
+}
 
-  if (drive >= 0) {
-    if (rotate >= 0) {                     // 1
-      frc::SmartDashboard::PutNumber("set loc.", 1);
-      p_rightSpeed = p_maximum;
-      p_leftSpeed = p_difference;
-    } else {                               // 2
-    frc::SmartDashboard::PutNumber("set loc.", 2);
-      p_rightSpeed = p_total;
-      p_leftSpeed = p_maximum;
-    }
-  } else {                                 // 3
-  frc::SmartDashboard::PutNumber("set loc.", 3);
-    if (rotate >= 0) {
-      p_rightSpeed = p_total;
-      p_leftSpeed = -p_maximum;
-    } else {                               // 4
-    frc::SmartDashboard::PutNumber("set loc.", 4);
-      p_rightSpeed = -p_maximum;
-      p_leftSpeed = p_difference;
-    }
-  }
-  // LeftFront.Set(p_leftSpeed);
-  // LeftCenter.Set(p_leftSpeed);
-  // LeftRear.Set(p_leftSpeed);
+void Robot::setDrivetrain(double rotate, double drive, double mixConstant, bool zeroTurn) {      // todo: handle false zero turn as well as mix Constant input.
+ //cws4
+  // mixConstant: range is 0+ to 1.0.   mixConstant of a low value will prevent a great speed difference between left and right.
+  // This code doesn't allow for opposite spin of left and right side (to avoid robot digging into gravel and not spinning).
+  // This code allows for mixConstant to limit a great speed difference between left and right side (to avoid robot possibly digging into gravel).
+  double p_leftSpeed, p_rightSpeed;
+  double absFastSpeed, absLowSpeed;
+  double fastSpeed, lowSpeed;
+
+  absFastSpeed = std::abs(drive);
+  absLowSpeed = absFastSpeed - map(std::abs(rotate), 0, 1., 0, absFastSpeed * mixConstant); // don't let the rotate/steering get larger than the drive/speed.
  
-  // RightFront.Set(p_rightSpeed);
+  if (drive >= 0)
+  {
+    fastSpeed = absFastSpeed;
+    lowSpeed  = absLowSpeed;
+  }
+  else // (drive < 0)
+  {
+    fastSpeed = -absFastSpeed;
+    lowSpeed  = -absLowSpeed;
+  }
+
+  if (rotate >= 0)
+  {
+    p_leftSpeed  = fastSpeed;
+    p_rightSpeed = lowSpeed;
+  }
+  else // (rotate < 0)
+  {
+    p_leftSpeed  = lowSpeed;
+    p_rightSpeed = fastSpeed;
+  }
+
+  // CWS note: I have reversed everything here. Remove the "-" negative if the motors all run backwards to expected.
+  // LeftFront.Set (p_leftSpeed);
+  // LeftCenter.Set(p_leftSpeed);
+  // LeftRear.Set  (p_leftSpeed);
+
+  // RightFront.Set (p_rightSpeed);
   // RightCenter.Set(p_rightSpeed);
-  // RightRear.Set(p_rightSpeed);
+  // RightRear.Set  (p_rightSpeed);
 
   frc::SmartDashboard::PutNumber("p_leftSpeed", -p_leftSpeed);
   frc::SmartDashboard::PutNumber("p_rightSpeed", -p_rightSpeed);
-}
+
+} // SetDriveTrain()
 
 // void Robot::setDrivetrain(double rateOfTurn, double speed, double mixConstant, bool zeroTurn) {
 //   double p_leftSpeed = 0;
@@ -303,10 +316,6 @@ void Robot::setDrivetrain(double rotate, double drive, double mixConstant, bool 
 //   frc::SmartDashboard::PutNumber("p_rightSpeed", -p_rightSpeed);
 // }
 
-float map(float input, float inA, float inb, float outA, float outB) {      // map function for easy conversion of input to output values
-  float output = outA + ((outB - outA) / (inb -inA)) * (input - inA);
-  return output;
-}
 
 
 
