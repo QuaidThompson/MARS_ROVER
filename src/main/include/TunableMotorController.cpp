@@ -45,6 +45,7 @@
             void Set(double percentOutput);
             void SetInverted(bool invert);
             void SetSecondaryCurrentLimit(double maxAmps);
+            void SetIdleMode(rev::CANSparkMax::IdleMode mode);
     };
 
 

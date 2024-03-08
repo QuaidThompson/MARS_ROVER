@@ -5,7 +5,7 @@
 
 
     /**
-     * This Libbrary is designed to make use
+     * This Library is designed to make use
      * of the individual drivetrain control
      * style, but allow for "tuning" the
      * dead-zone and max speed of brushed
@@ -123,6 +123,15 @@
 
     void TunableMotorController::SetSecondaryCurrentLimit(double maxAmps) {
         p_motor->SetSecondaryCurrentLimit(maxAmps);
+    }
+
+    void TunableMotorController::SetIdleMode(rev::CANSparkMax::IdleMode mode) {
+        if (p_motor) {
+            p_motor->SetIdleMode(mode);
+        } else {
+            std::cout << "Motor not initialized\n";
+            // Handle the error appropriately
+        }
     }
 
 

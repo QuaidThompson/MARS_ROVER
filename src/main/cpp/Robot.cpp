@@ -214,7 +214,7 @@ void Robot::setDrivetrain(double rotate, double drive, double mixConstant, bool 
   double p_leftSpeed, p_rightSpeed;
   double absFastSpeed, absLowSpeed;
   double fastSpeed, lowSpeed;
-  double maxDifference = .5;
+  double maxDifference = .7;
   int location = 0;
 
   absFastSpeed = std::abs(drive);
@@ -280,6 +280,15 @@ void Robot::setDrivetrain(double rotate, double drive, double mixConstant, bool 
       }
     }
   }
+
+
+  LeftFront.SetIdleMode (rev::CANSparkMax::IdleMode::kBrake);
+  LeftCenter.SetIdleMode(rev::CANSparkMax::IdleMode::kBrake);
+  LeftRear.SetIdleMode  (rev::CANSparkMax::IdleMode::kBrake);
+
+  RightFront.SetIdleMode (rev::CANSparkMax::IdleMode::kBrake);
+  RightCenter.SetIdleMode(rev::CANSparkMax::IdleMode::kBrake);
+  RightRear.SetIdleMode  (rev::CANSparkMax::IdleMode::kBrake);
 
   LeftFront.Set (p_leftSpeed);
   LeftCenter.Set(p_leftSpeed);
