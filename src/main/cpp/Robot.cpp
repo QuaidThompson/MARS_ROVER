@@ -166,22 +166,27 @@ float RampVal(float currentVal, float targetVal, float rampIncriment) {
       if (f > rampIncriment) {
         currentVal -= rampIncriment;
         return currentVal;
-      } else {
+      }
+      else {
         return targetVal;
       }
-    } else if (currentVal < targetVal) { // if we are ramping up
+    }
+    else if (currentVal < targetVal) { // if we are ramping up
       float f = targetVal - currentVal;
       if (f > rampIncriment) {
         currentVal += rampIncriment;
         return currentVal;
-      } else {
+      }
+      else {
         return targetVal;
       }
-    } else {
+    }
+    else {
       print("!!! N.F.G. !!!"); // shouldnt ever get here
       return 0;
     }
-  } else { // if we are already at the intended value
+  }
+  else { // if we are already at the intended value
     return targetVal;
   }
 }
@@ -208,7 +213,8 @@ void Robot::setDrivetrain(double rotate, double drive, double mixConstant) { // 
   if (drive >= 0) {
     fastSpeed = absFastSpeed;
     lowSpeed = absLowSpeed;
-  } else // (drive < 0)
+  }
+  else // (drive < 0)
   {
     fastSpeed = -absFastSpeed;
     lowSpeed = -absLowSpeed;
@@ -217,7 +223,8 @@ void Robot::setDrivetrain(double rotate, double drive, double mixConstant) { // 
   if (rotate >= 0) {
     p_leftSpeed = fastSpeed;
     p_rightSpeed = lowSpeed;
-  } else // (rotate < 0)
+  }
+  else // (rotate < 0)
   {
     p_leftSpeed = lowSpeed;
     p_rightSpeed = fastSpeed;
@@ -229,19 +236,22 @@ void Robot::setDrivetrain(double rotate, double drive, double mixConstant) { // 
       if ((p_leftSpeed - p_rightSpeed) > maxDifference) {
         p_rightSpeed = p_leftSpeed - maxDifference;
       }
-    } else if (p_leftSpeed < p_rightSpeed) {
+    }
+    else if (p_leftSpeed < p_rightSpeed) {
       location = 2;
       if ((p_rightSpeed - p_leftSpeed) > maxDifference) {
         p_leftSpeed = p_rightSpeed - maxDifference;
       }
     }
-  } else if (drive < 0) {
+  }
+  else if (drive < 0) {
     if (p_leftSpeed > p_rightSpeed) {
       location = 3;
       if ((p_leftSpeed - p_rightSpeed) > maxDifference) {
         p_leftSpeed = p_rightSpeed + maxDifference;
       }
-    } else if (p_leftSpeed < p_rightSpeed) {
+    }
+    else if (p_leftSpeed < p_rightSpeed) {
       location = 4;
       if ((p_rightSpeed - p_leftSpeed) > maxDifference) {
         p_rightSpeed = p_leftSpeed + maxDifference;
@@ -275,9 +285,11 @@ void Robot::setDrivetrain(double rotate, double drive, double mixConstant) { // 
 double Robot::GetJoyWithDZ(double joystickVal, double minPosVal, double maxNegVal) {
   if (joystickVal >= minPosVal) {
     return map(joystickVal, minPosVal, 1, 0, 1);
-  } else if (joystickVal <= maxNegVal) {
+  }
+  else if (joystickVal <= maxNegVal) {
     return map(joystickVal, minPosVal, -1, 0, -1);
-  } else {
+  }
+  else {
     return 0;
   }
 }
@@ -314,99 +326,99 @@ void SendData() {
 /*FUNCTIONS (need to be moved to a seperate file to keep this one clean)*/
 
 #ifndef DEBUG_TUNABLE
-  void Robot::RobotInit() {
-  // frc::SmartDashboard::PutBoolean("DEBUG_TUNABLE", false);
-    #ifndef REVERSE_DEFFAULT_MOTOR_DIRECTION
-    LeftMotors.SetInverted(true);
-    RightMotors.SetInverted(false);
-    #else
-    LeftMotors.SetInverted(false);
-    RightMotors.SetInverted(true);
-    #endif
+void Robot::RobotInit() {
+// frc::SmartDashboard::PutBoolean("DEBUG_TUNABLE", false);
+  #ifndef REVERSE_DEFFAULT_MOTOR_DIRECTION
+  LeftMotors.SetInverted(true);
+  RightMotors.SetInverted(false);
+  #else
+  LeftMotors.SetInverted(false);
+  RightMotors.SetInverted(true);
+  #endif
 
-    #ifdef MOTOR_CURRENT_LIMMITING
-    LeftFront.SetSecondaryCurrentLimit(MAX_CURRENT / NUM_OF_MOTORS);
-    LeftCenter.SetSecondaryCurrentLimit(MAX_CURRENT / NUM_OF_MOTORS);
-    LeftRear.SetSecondaryCurrentLimit(MAX_CURRENT / NUM_OF_MOTORS);
-    RightFront.SetSecondaryCurrentLimit(MAX_CURRENT / NUM_OF_MOTORS);
-    RightCenter.SetSecondaryCurrentLimit(MAX_CURRENT / NUM_OF_MOTORS);
-    RightRear.SetSecondaryCurrentLimit(MAX_CURRENT / NUM_OF_MOTORS);
-    #endif
+  #ifdef MOTOR_CURRENT_LIMMITING
+  LeftFront.SetSecondaryCurrentLimit(MAX_CURRENT / NUM_OF_MOTORS);
+  LeftCenter.SetSecondaryCurrentLimit(MAX_CURRENT / NUM_OF_MOTORS);
+  LeftRear.SetSecondaryCurrentLimit(MAX_CURRENT / NUM_OF_MOTORS);
+  RightFront.SetSecondaryCurrentLimit(MAX_CURRENT / NUM_OF_MOTORS);
+  RightCenter.SetSecondaryCurrentLimit(MAX_CURRENT / NUM_OF_MOTORS);
+  RightRear.SetSecondaryCurrentLimit(MAX_CURRENT / NUM_OF_MOTORS);
+  #endif
 
-    #ifdef FEATURE_UNDER_DEVELOPMENT
-    LeftFrontPIDController.SetFeedbackDevice(LeftFrontEncoder);
-    LeftFrontPIDController.SetP(kP);
-    LeftFrontPIDController.SetI(kI);
-    LeftFrontPIDController.SetD(kD);
-    LeftFrontPIDController.SetIZone(kIz);
-    LeftFrontPIDController.SetFF(kFF);
-    LeftFrontPIDController.SetOutputRange(kMinOutput, kMaxOutput);
-    #endif
-      // TODO: set drivetrain configuration
-      // TODO: set all drivetrain motors to break mode  probably need to create my own class that contains the drivetrain motors and has functions to update the different parameters like break mode*
-    frc::CameraServer::StartAutomaticCapture();
-    #ifdef FEATURE_UNDER_DEVELOPMENT
-    frc::CameraServer::StartAutomaticCapture(1);
-    #endif
+  #ifdef FEATURE_UNDER_DEVELOPMENT
+  LeftFrontPIDController.SetFeedbackDevice(LeftFrontEncoder);
+  LeftFrontPIDController.SetP(kP);
+  LeftFrontPIDController.SetI(kI);
+  LeftFrontPIDController.SetD(kD);
+  LeftFrontPIDController.SetIZone(kIz);
+  LeftFrontPIDController.SetFF(kFF);
+  LeftFrontPIDController.SetOutputRange(kMinOutput, kMaxOutput);
+  #endif
+    // TODO: set drivetrain configuration
+    // TODO: set all drivetrain motors to break mode  probably need to create my own class that contains the drivetrain motors and has functions to update the different parameters like break mode*
+  frc::CameraServer::StartAutomaticCapture();
+  #ifdef FEATURE_UNDER_DEVELOPMENT
+  frc::CameraServer::StartAutomaticCapture(1);
+  #endif
 
-    #ifdef DEBUG_CURRENT
-      // #pragma message("frc::SmartDashboard::PutNumber("MAX Current", maxCurrent);")
-      // frc::SmartDashboard::PutNumber("MAX Current", maxCurrent);
-    #endif
+  #ifdef DEBUG_CURRENT
+    // #pragma message("frc::SmartDashboard::PutNumber("MAX Current", maxCurrent);")
+    // frc::SmartDashboard::PutNumber("MAX Current", maxCurrent);
+  #endif
 
-    #ifdef FEATURE_UNDER_DEVELOPMENT
-      // frc::SmartDashboard::PutNumber("P Gain", kP);
-      // frc::SmartDashboard::PutNumber("I Gain", kI);
-      // frc::SmartDashboard::PutNumber("D Gain", kD);
-      // frc::SmartDashboard::PutNumber("I Zone", kIz);
-      // frc::SmartDashboard::PutNumber("Feed Forward", kFF);
-      // frc::SmartDashboard::PutNumber("Max Output", kMaxOutput);
-      // frc::SmartDashboard::PutNumber("Min Output", kMinOutput);
-      // frc::SmartDashboard::PutNumber("Set Rotations", 0);
-    #endif
+  #ifdef FEATURE_UNDER_DEVELOPMENT
+    // frc::SmartDashboard::PutNumber("P Gain", kP);
+    // frc::SmartDashboard::PutNumber("I Gain", kI);
+    // frc::SmartDashboard::PutNumber("D Gain", kD);
+    // frc::SmartDashboard::PutNumber("I Zone", kIz);
+    // frc::SmartDashboard::PutNumber("Feed Forward", kFF);
+    // frc::SmartDashboard::PutNumber("Max Output", kMaxOutput);
+    // frc::SmartDashboard::PutNumber("Min Output", kMinOutput);
+    // frc::SmartDashboard::PutNumber("Set Rotations", 0);
+  #endif
 
-    #ifdef DEBUG_OTHER
-      // frc::SmartDashboard::PutNumber("Ramp Increment Speed" , rampIncrementSpeed);
-      // frc::SmartDashboard::PutNumber("Ramp Increment Rotation" , rampIncrementRotation);
-      // frc::SmartDashboard::PutNumber("Max Speed" , maxSpeed);
-      // frc::SmartDashboard::PutNumber("Max Rotation" , maxRotation);
-    #endif
+  #ifdef DEBUG_OTHER
+    // frc::SmartDashboard::PutNumber("Ramp Increment Speed" , rampIncrementSpeed);
+    // frc::SmartDashboard::PutNumber("Ramp Increment Rotation" , rampIncrementRotation);
+    // frc::SmartDashboard::PutNumber("Max Speed" , maxSpeed);
+    // frc::SmartDashboard::PutNumber("Max Rotation" , maxRotation);
+  #endif
+}
+
+void Robot::RobotPeriodic() { // ERROR: warn user if there is no controler conected for input and disable all motors
+  // ERROR: warn user if the Leonardo isnt conected
+  useF310ForControl = f310.IsConnected(); // ERROR: warn user that the driver station is using the logitech for control inputs
+  #ifdef DEBUG_CURRENT
+  #pragma message("double mtr1Amps = PowerDistrobutionHub.GetCurrent(2);")
+  double mtr1Amps = PowerDistrobutionHub.GetCurrent(2);
+  double mtr2Amps = PowerDistrobutionHub.GetCurrent(1);
+  double mtr3Amps = PowerDistrobutionHub.GetCurrent(0);
+  double mtr4Amps = PowerDistrobutionHub.GetCurrent(13);
+  double mtr5Amps = PowerDistrobutionHub.GetCurrent(14);
+  double mtr6Amps = PowerDistrobutionHub.GetCurrent(15);
+  double totalCurrent = PowerDistrobutionHub.GetTotalCurrent();
+  // frc::SmartDashboard::PutNumber("MTR1 Current" , mtr1Amps);
+  // frc::SmartDashboard::PutNumber("MTR2 Current" , mtr2Amps);
+  // frc::SmartDashboard::PutNumber("MTR3 Current" , mtr3Amps);
+  // frc::SmartDashboard::PutNumber("MTR4 Current" , mtr4Amps);
+  // frc::SmartDashboard::PutNumber("MTR5 Current" , mtr5Amps);
+  // frc::SmartDashboard::PutNumber("MTR6 Current" , mtr6Amps);
+  // frc::SmartDashboard::PutNumber("Total Current", mtr6Amps);
+  // frc::SmartDashboard::PutNumber("Total Current", mtr6Amps);
+  if (maxCurrent < totalCurrent) {
+    maxCurrent = totalCurrent;
+    #pragma message("frc::SmartDashboard::PutNumber(" MAX Current ", maxCurrent);")
+        // frc::SmartDashboard::PutNumber("MAX Current", maxCurrent);
   }
+  #endif
 
-  void Robot::RobotPeriodic() { // ERROR: warn user if there is no controler conected for input and disable all motors
-    // ERROR: warn user if the Leonardo isnt conected
-    useF310ForControl = f310.IsConnected(); // ERROR: warn user that the driver station is using the logitech for control inputs
-    #ifdef DEBUG_CURRENT
-    #pragma message("double mtr1Amps = PowerDistrobutionHub.GetCurrent(2);")
-    double mtr1Amps = PowerDistrobutionHub.GetCurrent(2);
-    double mtr2Amps = PowerDistrobutionHub.GetCurrent(1);
-    double mtr3Amps = PowerDistrobutionHub.GetCurrent(0);
-    double mtr4Amps = PowerDistrobutionHub.GetCurrent(13);
-    double mtr5Amps = PowerDistrobutionHub.GetCurrent(14);
-    double mtr6Amps = PowerDistrobutionHub.GetCurrent(15);
-    double totalCurrent = PowerDistrobutionHub.GetTotalCurrent();
-    // frc::SmartDashboard::PutNumber("MTR1 Current" , mtr1Amps);
-    // frc::SmartDashboard::PutNumber("MTR2 Current" , mtr2Amps);
-    // frc::SmartDashboard::PutNumber("MTR3 Current" , mtr3Amps);
-    // frc::SmartDashboard::PutNumber("MTR4 Current" , mtr4Amps);
-    // frc::SmartDashboard::PutNumber("MTR5 Current" , mtr5Amps);
-    // frc::SmartDashboard::PutNumber("MTR6 Current" , mtr6Amps);
-    // frc::SmartDashboard::PutNumber("Total Current", mtr6Amps);
-    // frc::SmartDashboard::PutNumber("Total Current", mtr6Amps);
-    if (maxCurrent < totalCurrent) {
-      maxCurrent = totalCurrent;
-      #pragma message("frc::SmartDashboard::PutNumber(" MAX Current ", maxCurrent);")
-          // frc::SmartDashboard::PutNumber("MAX Current", maxCurrent);
-    }
-    #endif
-
-    #ifdef DEBUG_OTHER
-      // rampIncrementSpeed = frc::SmartDashboard::GetNumber("Ramp Increment Speed" , rampIncrementSpeed);
-      // rampIncrementRotation = frc::SmartDashboard::GetNumber("Ramp Increment Rotation" , rampIncrementRotation);
-      // maxSpeed = frc::SmartDashboard::GetNumber("Max Speed" , maxSpeed);
-      // maxRotation = frc::SmartDashboard::GetNumber("Max Rotation" , maxRotation);
-    #endif
-  }
+  #ifdef DEBUG_OTHER
+    // rampIncrementSpeed = frc::SmartDashboard::GetNumber("Ramp Increment Speed" , rampIncrementSpeed);
+    // rampIncrementRotation = frc::SmartDashboard::GetNumber("Ramp Increment Rotation" , rampIncrementRotation);
+    // maxSpeed = frc::SmartDashboard::GetNumber("Max Speed" , maxSpeed);
+    // maxRotation = frc::SmartDashboard::GetNumber("Max Rotation" , maxRotation);
+  #endif
+}
 #endif
 #ifdef DEBUG_TUNABLE
 void Robot::RobotInit() {
@@ -427,7 +439,7 @@ void Robot::RobotInit() {
   RightFront.SetSmoothing(smoothingVal);
   RightCenter.SetSmoothing(smoothingVal);
   RightRear.SetSmoothing(smoothingVal);
-  
+
   LeftFront.SetInverted(false);
   LeftCenter.SetInverted(false);
   LeftRear.SetInverted(false);
@@ -522,13 +534,13 @@ void Robot::RobotPeriodic() {
   // RightCenter.SetBounds   (RightCenterMinForward,  RightCenterMaxForward,  RightCenterMinBackward,  RightCenterMaxBackward);
   // RightRear.SetBounds     (RightRearMinForward,    RightRearMaxForward,    RightRearMinBackward,    RightRearMaxBackward);
 
-  LeftFront.SetBounds    ( leftFrontParams [0],  leftFrontParams [1],  leftFrontParams [2],  leftFrontParams [3]);
-  LeftCenter.SetBounds   (leftCenterParams [0], leftCenterParams [1], leftCenterParams [2], leftCenterParams [3]);
-  LeftRear.SetBounds     (  leftRearParams [0],   leftRearParams [1],   leftRearParams [2],   leftRearParams [3]);
+  LeftFront.SetBounds(leftFrontParams [0], leftFrontParams [1], leftFrontParams [2], leftFrontParams [3]);
+  LeftCenter.SetBounds(leftCenterParams [0], leftCenterParams [1], leftCenterParams [2], leftCenterParams [3]);
+  LeftRear.SetBounds(leftRearParams [0], leftRearParams [1], leftRearParams [2], leftRearParams [3]);
 
-  RightFront.SetBounds   ( rightFrontParams [0],  rightFrontParams [1],  rightFrontParams [2],  rightFrontParams [3]);
-  RightCenter.SetBounds  (rightCenterParams [0], rightCenterParams [1], rightCenterParams [2], rightCenterParams [3]);
-  RightRear.SetBounds    (  rightRearParams [0],   rightRearParams [1],   rightRearParams [2],   rightRearParams [3]);
+  RightFront.SetBounds(rightFrontParams [0], rightFrontParams [1], rightFrontParams [2], rightFrontParams [3]);
+  RightCenter.SetBounds(rightCenterParams [0], rightCenterParams [1], rightCenterParams [2], rightCenterParams [3]);
+  RightRear.SetBounds(rightRearParams [0], rightRearParams [1], rightRearParams [2], rightRearParams [3]);
 }
 #endif
 
@@ -548,9 +560,10 @@ void Robot::AutonomousPeriodic() {
     if (servoAngle < 15) {
       direction = !direction;
     }
-  } else {
-    // panServo.SetAngle(servoAngle--);
-    // tiltServo.SetAngle(servoAngle--);
+  }
+  else {
+ // panServo.SetAngle(servoAngle--);
+ // tiltServo.SetAngle(servoAngle--);
     std::cout << "false    ";
     servoAngle++;
     if (servoAngle > 160) {
@@ -639,7 +652,8 @@ void Robot::TeleopPeriodic() {
       // dbg(panAngle);
       // dbg("   ");
       // dbgln(tiltAngle);
-    } else {
+    }
+    else {
       float steeringJoystickPos = arduinoLeonardo.GetRawAxis(LEONARDO_STEERING_JOYSTICK);
       float speedJoystickPos = arduinoLeonardo.GetRawAxis(LEONARDO_SPEED_JOYSTICK);
       #ifdef CAMERA_PAN_TILT
@@ -735,6 +749,15 @@ void Robot::TeleopPeriodic() {
   // double yJoyPos = GetJoyWithDZ(.21, .2, -.2);
 
   setDrivetrain(xJoyPos, yJoyPos, 1);
+
+  float panAngleRequest = arduinoLeonardo.GetRawAxis(LEONARDO_CAMERA_PAN);
+  float tiltAngleRequest = arduinoLeonardo.GetRawAxis(LEONARDO_CAMERA_TILT);
+
+  panAngle = RampVal(panAngle, panAngleRequest, .005);
+  tiltAngle = RampVal(tiltAngle, tiltAngleRequest, .005);
+
+  panAngle = panAngleRequest;
+  tiltAngle = tiltAngleRequest;
 
   panAngle = map(panAngle, 1, -1, MIN_PAN_ANGLE, MAX_PAN_ANGLE);
   tiltAngle = map(tiltAngle, -1, 1, MIN_TILT_ANGLE, MAX_TILT_ANGLE);
