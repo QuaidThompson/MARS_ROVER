@@ -118,13 +118,13 @@ float RightTankSpeed;
 
 double smoothingVal = .09;
 
-double leftFrontParams[]   = {0, .3, 0, -.3};
-double leftCenterParams[]  = {0, .3, 0, -.3};
-double leftRearParams[]    = {0, .3, 0, -.3};
+double leftFrontParams[] = {0, 1.0, 0, -1.0};
+double leftCenterParams[] = {0, 1.0, 0, -1.0};
+double leftRearParams[] = {0, 1.0, 0, -1.0};
 
-double rightFrontParams[]  = {0, .3, 0, -.3};
-double rightCenterParams[] = {0, .3, 0, -.3};
-double rightRearParams[]   = {0, .3, 0, -.3};
+double rightFrontParams[] = {0, 1.0, 0, -1.0};
+double rightCenterParams[] = {0, 1.0, 0, -1.0};
+double rightRearParams[] = {0, 1.0, 0, -1.0};
 
 double LeftFrontMinForward = 0;
 double LeftCenterMinForward = 0;
@@ -214,7 +214,7 @@ void Robot::setDrivetrain(double rotate, double drive, double mixConstant, bool 
   double p_leftSpeed, p_rightSpeed;
   double absFastSpeed, absLowSpeed;
   double fastSpeed, lowSpeed;
-  double maxDifference = .7;
+  double maxDifference = 1.0;
   int location = 0;
 
   absFastSpeed = std::abs(drive);
@@ -281,22 +281,21 @@ void Robot::setDrivetrain(double rotate, double drive, double mixConstant, bool 
     }
   }
 
-
-  LeftFront.SetIdleMode (rev::CANSparkMax::IdleMode::kBrake);
+  LeftFront.SetIdleMode(rev::CANSparkMax::IdleMode::kBrake);
   LeftCenter.SetIdleMode(rev::CANSparkMax::IdleMode::kBrake);
-  LeftRear.SetIdleMode  (rev::CANSparkMax::IdleMode::kBrake);
+  LeftRear.SetIdleMode(rev::CANSparkMax::IdleMode::kBrake);
 
-  RightFront.SetIdleMode (rev::CANSparkMax::IdleMode::kBrake);
+  RightFront.SetIdleMode(rev::CANSparkMax::IdleMode::kBrake);
   RightCenter.SetIdleMode(rev::CANSparkMax::IdleMode::kBrake);
-  RightRear.SetIdleMode  (rev::CANSparkMax::IdleMode::kBrake);
+  RightRear.SetIdleMode(rev::CANSparkMax::IdleMode::kBrake);
 
-  LeftFront.Set (p_leftSpeed);
+  LeftFront.Set(p_leftSpeed);
   LeftCenter.Set(p_leftSpeed);
-  LeftRear.Set  (p_leftSpeed);
+  LeftRear.Set(p_leftSpeed);
 
-  RightFront.Set (p_rightSpeed);
+  RightFront.Set(p_rightSpeed);
   RightCenter.Set(p_rightSpeed);
-  RightRear.Set  (p_rightSpeed);
+  RightRear.Set(p_rightSpeed);
 
   frc::SmartDashboard::PutNumber("p_leftSpeed", -p_leftSpeed);
   frc::SmartDashboard::PutNumber("p_rightSpeed", -p_rightSpeed);
@@ -934,6 +933,10 @@ void Robot::TeleopPeriodic()
 
   float xJoyPos = GetJoyWithDZ(arduinoLeonardo.GetRawAxis(LEONARDO_STEERING_JOYSTICK), .03, -.03);
   float yJoyPos = GetJoyWithDZ(arduinoLeonardo.GetRawAxis(LEONARDO_SPEED_JOYSTICK), .03, -.03);
+
+  xJoyPos = map(xJoyPos, 1.0, -1.0, 0.4, -0.4);
+  yJoyPos = map(yJoyPos, 1.0, -1.0, 0.4, -0.4);
+
   frc::SmartDashboard::PutNumber("xJoyPos", xJoyPos);
   frc::SmartDashboard::PutNumber("yJoyPos", -yJoyPos);
 
