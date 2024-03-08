@@ -125,12 +125,10 @@ class Robot : public frc::TimedRobot {
     ////////////////////////
     #endif
 
-    #ifdef DEBUG_OTHER
-        void drivetrainMotorTest();
-        void directSpeedControl();
-    #endif
+    void drivetrainMotorTest();
+    void directSpeedControl();
 
-    void setDrivetrain(double rateOfTurn, double speed, double mixConstant, bool zeroTurn);
+    // void setDrivetrain(double rateOfTurn, double speed, double mixConstant, bool zeroTurn);
     void setDrivetrain(double rateOfTurn, double speed, double mixConstant);
     double GetJoyWithDZ(double joystickVal, double minPosVal, double maxNegVal);
 

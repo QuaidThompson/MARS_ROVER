@@ -103,5 +103,7 @@
   "C_Cpp.vcFormat.newLine.closeBraceSameLine.emptyFunction": true,
   "C_Cpp.vcFormat.newLine.closeBraceSameLine.emptyType": true,
   "C_Cpp.vcFormat.space.beforeOpenSquareBracket": true,
-  "java.format.comments.enabled": false
+  "C_Cpp.formatting": "vcFormat",
+  "java.format.comments.enabled": false,
+  "C_Cpp.vcFormat.indent.braces": false,
 }
