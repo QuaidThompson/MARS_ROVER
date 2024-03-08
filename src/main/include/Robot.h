@@ -21,6 +21,7 @@
 #include <frc/shuffleboard/Shuffleboard.h>
 #include <frc/smartdashboard/SmartDashboard.h>
 #include <rev/CANEncoder.h>
+#include <frc/PS4Controller.h>
 
 #include "TunableMotorController.h"
 // #include "TunableMotorControllerGroup.h"
@@ -92,6 +93,7 @@ class Robot : public frc::TimedRobot {
     /*controller declarations*/
     frc::GenericHID arduinoLeonardo {0};
     frc::GenericHID f310 {1};
+    frc::PS4Controller PS4 {5};
     /*controller declarations*/
     ///////////////////////////
 
