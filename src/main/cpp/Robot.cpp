@@ -120,13 +120,13 @@ float RightTankSpeed;
 
 double smoothingVal = .09;
 
-double  leftFrontParams[] = { 0, 1.0, 0, -1.0 };
-double leftCenterParams[] = { 0, 1.0, 0, -1.0 };
-double   leftRearParams[] = { 0, 1.0, 0, -1.0 };
+double  leftFrontParams[] = { 0, 0.4, 0, -0.4 };
+double leftCenterParams[] = { 0, 0.6, 0, -0.6 };
+double   leftRearParams[] = { 0, 0.4, 0, -0.4 };
 
-double  rightFrontParams[] = { 0, 1.0, 0, -1.0 };
-double rightCenterParams[] = { 0, 1.0, 0, -1.0 };
-double   rightRearParams[] = { 0, 1.0, 0, -1.0 };
+double  rightFrontParams[] = { 0, 0.4, 0, -0.4 };
+double rightCenterParams[] = { 0, 0.6, 0, -0.6 };
+double   rightRearParams[] = { 0, 0.4, 0, -0.4 };
 
 double LeftFrontMinForward = 0;
 double LeftCenterMinForward = 0;
@@ -738,9 +738,6 @@ void Robot::TeleopPeriodic() {
 
   float xJoyPos = GetJoyWithDZ(arduinoLeonardo.GetRawAxis(LEONARDO_STEERING_JOYSTICK), .03, -.03);
   float yJoyPos = GetJoyWithDZ(arduinoLeonardo.GetRawAxis(LEONARDO_SPEED_JOYSTICK), .03, -.03);
-
-  xJoyPos = map(xJoyPos, 1.0, -1.0, 0.4, -0.4);
-  yJoyPos = map(yJoyPos, 1.0, -1.0, 0.4, -0.4);
 
   frc::SmartDashboard::PutNumber("xJoyPos", xJoyPos);
   frc::SmartDashboard::PutNumber("yJoyPos", -yJoyPos);
