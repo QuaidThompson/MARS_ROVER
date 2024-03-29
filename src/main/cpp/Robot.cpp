@@ -120,13 +120,13 @@ float RightTankSpeed;
 
 double smoothingVal = .09;
 
-double  leftFrontParams[] = { 0, 0.4, 0, -0.4 };
-double leftCenterParams[] = { 0, 0.6, 0, -0.6 };
-double   leftRearParams[] = { 0, 0.4, 0, -0.4 };
+double  leftFrontParams[] = { 0, 0.3, 0, -0.3 };
+double leftCenterParams[] = { 0, 0.5, 0, -0.5 };
+double   leftRearParams[] = { 0, 0.3, 0, -0.3 };
 
-double  rightFrontParams[] = { 0, 0.4, 0, -0.4 };
-double rightCenterParams[] = { 0, 0.6, 0, -0.6 };
-double   rightRearParams[] = { 0, 0.4, 0, -0.4 };
+double  rightFrontParams[] = { 0, 0.3, 0, -0.3 };
+double rightCenterParams[] = { 0, 0.5, 0, -0.5 };
+double   rightRearParams[] = { 0, 0.3, 0, -0.3 };
 
 double LeftFrontMinForward = 0;
 double LeftCenterMinForward = 0;
