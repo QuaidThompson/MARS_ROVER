@@ -130,6 +130,7 @@ class Robot : public frc::TimedRobot {
 
     // void setDrivetrain(double rateOfTurn, double speed, double mixConstant, bool zeroTurn);
     void setDrivetrain(double rateOfTurn, double speed, double mixConstant);
+    void setDrivetrainNoLimmit(double rateOfTurn, double speed, double mixConstant);
     double GetJoyWithDZ(double joystickVal, double minPosVal, double maxNegVal);
 
 

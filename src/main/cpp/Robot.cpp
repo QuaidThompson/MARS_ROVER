@@ -282,6 +282,63 @@ void Robot::setDrivetrain(double rotate, double drive, double mixConstant) { // 
 } // SetDriveTrain()
 
 
+void Robot::setDrivetrainNoLimmit(double rotate, double drive, double mixConstant) { // todo: handle false zero turn as well as mix Constant input.
+  // cws4
+  //  mixConstant: range is 0+ to 1.0.   mixConstant of a low value will prevent a great speed difference between left and right.
+  //  This code doesn't allow for opposite spin of left and right side (to avoid robot digging into gravel and not spinning).
+  //  This code allows for mixConstant to limit a great speed difference between left and right side (to avoid robot possibly digging into gravel).
+  double p_leftSpeed, p_rightSpeed;
+  double absFastSpeed, absLowSpeed;
+  double fastSpeed, lowSpeed;
+  double maxDifference = 1.0;
+  int location = 0;
+
+  absFastSpeed = std::abs(drive);
+  absLowSpeed = absFastSpeed - map(std::abs(rotate), 0, 1., 0, absFastSpeed * mixConstant); // don't let the rotate/steering get larger than the drive/speed.
+
+  if (drive >= 0) {
+    fastSpeed = absFastSpeed;
+    lowSpeed = absLowSpeed;
+  }
+  else // (drive < 0)
+  {
+    fastSpeed = -absFastSpeed;
+    lowSpeed = -absLowSpeed;
+  }
+
+  if (rotate >= 0) {
+    p_leftSpeed = fastSpeed;
+    p_rightSpeed = lowSpeed;
+  }
+  else // (rotate < 0)
+  {
+    p_leftSpeed = lowSpeed;
+    p_rightSpeed = fastSpeed;
+  }
+
+  LeftFront.SetIdleMode(rev::CANSparkMax::IdleMode::kBrake);
+  LeftCenter.SetIdleMode(rev::CANSparkMax::IdleMode::kBrake);
+  LeftRear.SetIdleMode(rev::CANSparkMax::IdleMode::kBrake);
+
+  RightFront.SetIdleMode(rev::CANSparkMax::IdleMode::kBrake);
+  RightCenter.SetIdleMode(rev::CANSparkMax::IdleMode::kBrake);
+  RightRear.SetIdleMode(rev::CANSparkMax::IdleMode::kBrake);
+
+  LeftFront.Set(p_leftSpeed);
+  LeftCenter.Set(p_leftSpeed);
+  LeftRear.Set(p_leftSpeed);
+
+  RightFront.Set(p_rightSpeed);
+  RightCenter.Set(p_rightSpeed);
+  RightRear.Set(p_rightSpeed);
+
+  frc::SmartDashboard::PutNumber("p_leftSpeed", -p_leftSpeed);
+  frc::SmartDashboard::PutNumber("p_rightSpeed", -p_rightSpeed);
+  frc::SmartDashboard::PutNumber("set loc.", location);
+
+} // setDrivetrainNoLimmit()
+
+
 double Robot::GetJoyWithDZ(double joystickVal, double minPosVal, double maxNegVal) {
   if (joystickVal >= minPosVal) {
     return map(joystickVal, minPosVal, 1, 0, 1);
@@ -745,7 +802,8 @@ void Robot::TeleopPeriodic() {
   // double xJoyPos = GetJoyWithDZ(.21, .2, -.2);
   // double yJoyPos = GetJoyWithDZ(.21, .2, -.2);
 
-  setDrivetrain(xJoyPos, yJoyPos, 1);
+  // setDrivetrain(xJoyPos, yJoyPos, 1);
+  setDrivetrainNoLimmit(xJoyPos, yJoyPos, 1);
 
   float panAngleRequest = arduinoLeonardo.GetRawAxis(LEONARDO_CAMERA_PAN);
   float tiltAngleRequest = arduinoLeonardo.GetRawAxis(LEONARDO_CAMERA_TILT);
