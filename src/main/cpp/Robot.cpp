@@ -5,6 +5,7 @@
 #include <iostream>
 #include <algorithm>
 #include <cmath>
+#include "LimelightHelpers.h"
 
 
 
@@ -155,6 +156,9 @@ double LeftRearMaxBackward = -1;
 double RightFrontMaxBackward = -1;
 double RightCenterMaxBackward = -1;
 double RightRearMaxBackward = -1;
+
+double tx = LimelightHelpers::getTX("");
+double ty = LimelightHelpers::getTY("");
 
 /*FUNCTIONS (need to be moved to a seperate file to keep this one clean)*/
 /*vvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvv*/
@@ -479,7 +483,9 @@ void Robot::RobotPeriodic() { // ERROR: warn user if there is no controler conec
 #endif
 #ifdef DEBUG_TUNABLE
 void Robot::RobotInit() {
-  frc::CameraServer::StartAutomaticCapture();
+  // frc::CameraServer::StartAutomaticCapture();
+  // frc::CameraServer::AddAxisCamera("wpilibpi.local:1181");
+  frc::CameraServer::GetVideo("wpilibpi.local");
 
   LeftFront.SetSecondaryCurrentLimit(MAX_CURRENT / NUM_OF_MOTORS);
   LeftCenter.SetSecondaryCurrentLimit(MAX_CURRENT / NUM_OF_MOTORS);
