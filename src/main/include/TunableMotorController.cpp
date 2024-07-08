@@ -22,8 +22,9 @@
     #include <frc/motorcontrol/MotorControllerGroup.h>
     #include <frc/drive/DifferentialDrive.h>
     #include <rev/CANSparkMaxLowLevel.h>
+    #include <frc/MotorSafety.h>
 
-    class TunableMotorController {
+    class TunableMotorController : public frc::MotorSafety {
         private:
             rev::CANSparkMax* p_motor;  // Declare the motor as a member variable
             double p_minForward = 0;
@@ -34,9 +35,11 @@
             double p_currentSpeed = 0;
             double p_rampIncrement = 1;
             bool   p_invert = false;
+            bool   safety = true;
             float p_map(float input, float inA, float inb, float outA, float outB);      // map function for easy conversion of input to output values
             float p_RampVal(float currentVal, float targetVal, float rampIncriment);
         public:
+            // void Feed() override;
             enum class p_MotorType { Brushed = 0, Brushless = 1 };
             explicit TunableMotorController(int m_MotorControllerID, p_MotorType m_MotorType);
             void Begin(int m_MotorControllerID, p_MotorType m_MotorType);
@@ -46,6 +49,11 @@
             void SetInverted(bool invert);
             void SetSecondaryCurrentLimit(double maxAmps);
             void SetIdleMode(rev::CANSparkMax::IdleMode mode);
+            void SetSafetyEnabled(bool state);
+            void Check();
+            void SetExpiration(units::second_t timeout);
+            void StopMotor();
+            std::string GetDescription() const override;
     };
 
 

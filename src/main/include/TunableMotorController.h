@@ -72,6 +72,10 @@
         }
     }
 
+    // void TunableMotorController::Feed() {
+    //     frc::MotorSafety::Feed();
+    // }
+
     void TunableMotorController::Begin(int m_MotorControllerID, p_MotorType m_MotorType) {
         if (m_MotorType == p_MotorType::Brushed) {
             p_motor = new rev::CANSparkMax(m_MotorControllerID, rev::CANSparkMaxLowLevel::MotorType::kBrushed);
@@ -101,11 +105,14 @@
             if (pl_percentOutput > 0) {  // forward
                 p_currentSpeed = p_RampVal(p_currentSpeed , p_map(pl_percentOutput, 0, 1, p_minForward, p_maxForward), p_rampIncrement);
                 p_motor->Set(p_currentSpeed);
+                Feed();
             } else if (pl_percentOutput < 0) {  // backward
                 p_currentSpeed = p_RampVal(p_currentSpeed , p_map(pl_percentOutput, 0, -1, p_minBackward, p_maxBackward), p_rampIncrement);
                 p_motor->Set(p_currentSpeed);
+                Feed();
             } else {  // stopped
                 p_motor->Set(0);
+                Feed();
             }
             
         } else {
@@ -132,6 +139,27 @@
             std::cout << "Motor not initialized\n";
             // Handle the error appropriately
         }
+    }
+
+    void TunableMotorController::SetSafetyEnabled(bool state = true) {
+        frc::MotorSafety::SetSafetyEnabled(true);
+    }
+
+    void TunableMotorController::Check() {
+        frc::MotorSafety::Check();
+    }
+
+
+    void TunableMotorController::SetExpiration(units::second_t timeout) {
+        frc::MotorSafety::SetExpiration(timeout);
+    }
+
+    void TunableMotorController::StopMotor() {
+        p_motor->StopMotor();
+    }
+    
+    std::string TunableMotorController::GetDescription() const {
+        return "TunableMotorController";
     }
 
 

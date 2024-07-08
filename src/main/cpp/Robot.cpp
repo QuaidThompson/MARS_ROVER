@@ -336,6 +336,14 @@ void Robot::setDrivetrainNoLimmit(double rotate, double drive, double mixConstan
   RightCenter.Set(p_rightSpeed);
   RightRear.Set(p_rightSpeed);
 
+  // LeftFront.Check();
+  // LeftCenter.Check();
+  // LeftRear.Check();
+
+  // RightFront.Check();
+  // RightCenter.Check();
+  // RightRear.Check();
+
   frc::SmartDashboard::PutNumber("p_leftSpeed", -p_leftSpeed);
   frc::SmartDashboard::PutNumber("p_rightSpeed", -p_rightSpeed);
   frc::SmartDashboard::PutNumber("set loc.", location);
@@ -510,6 +518,14 @@ void Robot::RobotInit() {
   RightFront.SetInverted(true);
   RightCenter.SetInverted(true);
   RightRear.SetInverted(true);
+
+  LeftFront.SetSafetyEnabled(true);
+  LeftCenter.SetSafetyEnabled(true);
+  LeftRear.SetSafetyEnabled(true);
+
+  RightFront.SetSafetyEnabled(true);
+  RightCenter.SetSafetyEnabled(true);
+  RightRear.SetSafetyEnabled(true);
   // frc::SmartDashboard::PutBoolean("DEBUG_TUNABLE", true);
 }
 void Robot::RobotPeriodic() {
@@ -604,6 +620,14 @@ void Robot::RobotPeriodic() {
   RightFront.SetBounds(rightFrontParams [0], rightFrontParams [1], rightFrontParams [2], rightFrontParams [3]);
   RightCenter.SetBounds(rightCenterParams [0], rightCenterParams [1], rightCenterParams [2], rightCenterParams [3]);
   RightRear.SetBounds(rightRearParams [0], rightRearParams [1], rightRearParams [2], rightRearParams [3]);
+
+  LeftFront.Check();
+  LeftCenter.Check();
+  LeftRear.Check();
+
+  RightFront.Check();
+  RightCenter.Check();
+  RightRear.Check();
 }
 #endif
 
