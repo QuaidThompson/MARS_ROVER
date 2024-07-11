@@ -788,6 +788,11 @@ void Robot::TeleopPeriodic() {
 #else
 void Robot::TeleopInit() {}
 void Robot::TeleopPeriodic() {
+
+  if (!f310.IsConnected() && !arduinoLeonardo.IsConnected()) {
+    return;
+  }
+  
   // tunableDrivetrain.Drive(f310.GetRawAxis(F310_LEFT_STICK_Y_AXIS), f310.GetRawAxis(F310_RIGHT_STICK_Y_AXIS) * -1);
 
   // double xJoyPos = f310.GetRawAxis(F310_RIGHT_STICK_X_AXIS);
